@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Start from "./vues/Start.vue"
+import NewsFeed from "./vues/NewsFeed.vue";
+import UserShow from "./vues/Users/Show.vue";
 export default createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: "/",
             name: "home",
-            component: Start,
+            component: NewsFeed,
+        },
+        {
+            path: "/users/:userId",
+            name: "user.show",
+            component: UserShow,
         },
     ],
 });

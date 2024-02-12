@@ -4,10 +4,8 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: "Sidebar"
-    }
+<script setup>
+    
 </script>
 
 <style scoped>
