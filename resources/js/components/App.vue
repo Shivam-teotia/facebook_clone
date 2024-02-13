@@ -15,6 +15,17 @@
 <script setup>
 import Nav from "./Nav.vue";
 import Sidebar from "./Sidebar.vue";
+import { useStore } from "vuex";
+import { onMounted, watchEffect } from "vue";
+import { useRoute } from "vue-router";
+const store = useStore();
+const route = useRoute();
+watchEffect(() => {
+  store.dispatch("setPageTitle", route.meta.title);
+});
+onMounted(() => {
+  store.dispatch("fetchAuthUser");
+});
 </script>
 
 <style scoped>

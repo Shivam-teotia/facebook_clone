@@ -52,7 +52,7 @@
         </svg>
       </router-link>
       <router-link
-        to="/"
+        :to="`/users/${user?.data?.user_id}`"
         class="px-6 border-b-2 border-white h-full flex items-center"
       >
         <img
@@ -91,7 +91,10 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import store from "../store";
+const user = computed(() => {
+  return store.getters.authUser;
+});
 </script>
 
-<style scoped>
-</style>
