@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPostController;
+use App\Http\Controllers\FriendRequestController;
+use App\Http\Controllers\FriendRequestResponseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,4 +24,6 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('posts', PostController::class);
     Route::apiResource('users.posts', UserPostController::class);
+    Route::apiResource('friend-request', FriendRequestController::class);
+    Route::apiResource('friend-request-response', FriendRequestResponseController::class);
 });
