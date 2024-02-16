@@ -24,12 +24,7 @@ class PostToTimelineTest extends TestCase
             $user,
             'api'
         )->post('/api/posts', [
-                    'data' => [
-                        'type' => 'posts',
-                        'attributes' => [
-                            'body' => 'Testing Body',
-                        ],
-                    ],
+                    'body' => 'Testing Body',
                 ]);
         $post = Post::first();
         $this->assertCount(1, Post::all());

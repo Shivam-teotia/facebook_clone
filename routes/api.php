@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPostController;
 use App\Http\Controllers\FriendRequestController;
@@ -23,6 +25,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('auth-user', [AuthController::class, 'show']);
     Route::apiResource('users', UserController::class);
     Route::apiResource('posts', PostController::class);
+    Route::apiResource('/posts/{post}/likes', PostLikeController::class);
+    Route::apiResource('/posts/{post}/comment', PostCommentController::class);
     Route::apiResource('users.posts', UserPostController::class);
     Route::apiResource('friend-request', FriendRequestController::class);
     Route::apiResource('friend-request-response', FriendRequestResponseController::class);

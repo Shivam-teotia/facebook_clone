@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,5 +26,16 @@ class Friend extends Model
                     ->where('user_id', $userId);
             })
             ->first();
+    }
+    public static function friendships()
+    {
+        return static::whereNotNull('confirmed_at')
+            ->where(
+                fn(Builder $query) =>
+                $query
+                    ->where('user_id', auth()->user()->id)
+                    ->orWhere('friend_id', auth()->user()->id)
+            )->get();
+
     }
 }

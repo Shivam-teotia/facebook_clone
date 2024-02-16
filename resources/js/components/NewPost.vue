@@ -10,13 +10,23 @@
           />
         </div>
       </div>
-      <div class="flex-1 mx-4">
+      <div class="flex-1 flex mx-4">
         <input
           type="text"
           name="body"
+          v-model="postMessage"
           class="w-full pl-4 h-8 bg-gray-200 rounded-full focus:outline-none focus:shadow-outline text-sm"
           placeholder="Add a post"
         />
+        <transition name="fade">
+          <button
+            v-if="postMessage"
+            @click="$store.dispatch('postMessage')"
+            class="bg-gray-200 ml-2 px-3 py-1 rounded-full"
+          >
+            Post
+          </button>
+        </transition>
       </div>
       <div>
         <button
@@ -38,5 +48,25 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { debounce } from "lodash";
+import { useStore } from "vuex";
+const store = useStore();
+const postMessage = computed({
+  get: () => store.getters.postMessage,
+  set: debounce(function (val) {
+    store.commit("updateMessage", val);
+  }, 1000),
+});
 </script>
 
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -1,12 +1,16 @@
 <template>
-  <div class="flex flex-col flex-1 h-screen overflow-y-hidden">
+  <div
+    class="flex flex-col flex-1 h-screen overflow-y-hidden"
+    v-if="$store.getters.authUser"
+  >
     <Nav />
 
     <div class="flex overflow-y-hidden flex-1">
       <Sidebar />
 
       <div class="overflow-x-hidden w-2/3">
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
+        <!-- withour key page wont re render on changeing params -->
       </div>
     </div>
   </div>
