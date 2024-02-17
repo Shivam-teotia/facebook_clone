@@ -42,6 +42,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function images()
+    {
+        return $this->hasMany(UserImage::class);
+    }
+    public function coverImage()
+    {
+        return $this->hasOne(UserImage::class)
+            ->orderByDesc('id')
+            ->where('location', 'cover');
+    }
+    public function profileImage()
+    {
+        return $this->hasOne(UserImage::class)
+            ->orderByDesc('id')
+            ->where('location', 'profile');
+    }
     public function posts()
     {
         return $this->hasMany(Post::class);

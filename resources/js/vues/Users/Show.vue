@@ -2,10 +2,11 @@
   <div class="flex flex-col items-center">
     <div class="relative mb-8">
       <div class="w-100 h-64 overflow-hidden z-10">
-        <img
-          src="https://cdn.pixabay.com/photo/2017/03/26/12/13/countryside-2175353_960_720.jpg"
-          alt="user background image"
-          class="object-cover w-full"
+        <UploadableImages
+          image-width="1500"
+          image-height="300"
+          location="cover"
+          :user-image="user?.data?.attributes?.cover_image"
         />
       </div>
       <div class="absolute flex items-center bottom-0 left-0 -mb-8 ml-12 z-20">
@@ -67,6 +68,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import Post from "../../components/Post.vue";
+import UploadableImages from "../../components/UploadableImages.vue";
 import { useStore } from "vuex";
 const route = useRoute();
 const store = useStore();
