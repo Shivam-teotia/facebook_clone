@@ -1,18 +1,21 @@
 <template>
   <div>
     <img
-      :src="imageObject?.data?.attributes?.path"
-      alt="user background image"
+      :src="userImage?.data?.attributes?.path"
+      :alt="alt"
       ref="userImage"
-      class="object-cover w-full"
+      :class="classes"
     />
   </div>
 </template>
 <script setup>
 import Dropzone from "dropzone";
 import { onMounted, ref, getCurrentInstance, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 const dropzone = ref(null);
-let uploadedImage = ref(null);
+const { store } = useStore();
+const { route } = useRoute();
 onMounted(() => {
   dropzone.value = new Dropzone(
     getCurrentInstance().ctx.$refs.userImage,
@@ -24,13 +27,10 @@ const props = defineProps([
   "imageWidth",
   "imageHeight",
   "location",
-  // "classes",
-  // "alt",
+  "classes",
+  "alt",
   "userImage",
 ]);
-const imageObject = computed(() => {
-  return uploadedImage || props.userImage;
-});
 const settings = computed(() => {
   return {
     paramName: "image",
@@ -46,12 +46,9 @@ const settings = computed(() => {
         .content,
     },
     success: (e, res) => {
-      alert("uploaded!");
-      console.log(res);
-      uploadedImage = res;
-      //   store.dispatch("fetchAuthUser");
-      //   store.dispatch("fetchProfileUser", route.params.userId);
-      //   store.dispatch("fetchUserPost", route.params.userId);
+      store.dispatch("fetchAuthUser");
+      store.dispatch("fetchProfileUser", route.params.userId);
+      store.dispatch("fetchUserPost", route.params.userId);
     },
   };
 });

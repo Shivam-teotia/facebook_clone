@@ -21,7 +21,7 @@
         <transition name="fade">
           <button
             v-if="postMessage"
-            @click="$store.dispatch('postMessage')"
+            @click="postHandler"
             class="bg-gray-200 ml-2 px-3 py-1 rounded-full"
           >
             Post
@@ -30,7 +30,8 @@
       </div>
       <div>
         <button
-          class="flex justify-center items-center rounded-full w-10 h-10 bg-gray-200"
+          ref="postImage"
+          class="dz-clickable flex justify-center items-center rounded-full w-10 h-10 bg-gray-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -48,16 +49,59 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted, ref, getCurrentInstance } from "vue";
 import { debounce } from "lodash";
 import { useStore } from "vuex";
+import Dropzone from "dropzone";
 const store = useStore();
+const dropzone = ref(null);
+let authUser = ref(null);
+authUser.value = store.getters.authUser;
 const postMessage = computed({
   get: () => store.getters.postMessage,
   set: debounce(function (val) {
     store.commit("updateMessage", val);
   }, 1000),
 });
+const settings = computed(() => ({
+  paramName: "image",
+  url: "/api/posts",
+  acceptedFiles: "image/*",
+  clickable: ".dz-clickable",
+  previewsContainer: ".dropzone-previews",
+  previewTemplate: document.querySelector("#dz-template").innerHTML,
+  autoProcessQueue: false,
+  maxFiles: 1,
+  params: {
+    width: 1000,
+    height: 1000,
+  },
+  headers: {
+    "X-CSRF-TOKEN": document.head.querySelector("meta[name=csrf-token]")
+      .content,
+  },
+  sending: (file, xhr, formData) => {
+    formData.append("body", store.getters.postMessage);
+  },
+  success: (event, res) => {
+    // alert("success");
+    dropzone.value.removeAllFiles();
+    store.commit("pushPost", res);
+  },
+  maxfilesexceeded: (file) => {
+    dropzone.value.removeAllFiles();
+    dropzone.value.addFile(file);
+  },
+}));
+onMounted(() => {
+  dropzone.value = new Dropzone(
+    getCurrentInstance().ctx.$refs.postImage,
+    settings.value
+  );
+});
+function postHandler() {
+  store.dispatch("postMessage");
+}
 </script>
 
 <style scoped>

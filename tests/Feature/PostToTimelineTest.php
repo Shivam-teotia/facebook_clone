@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\Models\User;
 
@@ -15,6 +17,11 @@ class PostToTimelineTest extends TestCase
     /**
      * A basic feature test example.
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Storage::fake('public');
+    }
     public function test_a_user_can_post_a_text_post()
     {
 
@@ -48,6 +55,33 @@ class PostToTimelineTest extends TestCase
                 ],
                 "links" => [
                     'self' => url('/posts/' . $post->id),
+                ],
+            ]);
+    }
+    public function test_a_user_can_post_a_text_image_post()
+    {
+
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
+        $response = $this->actingAs(
+            $user,
+            'api'
+        );
+        $file = UploadedFile::fake()->image('user-post.jpg');
+        $response = $this->post('/api/posts', [
+            'body' => 'Testing Body',
+            'image' => $file,
+            'width' => 100,
+            'height' => 100,
+        ]);
+        Storage::disk('public')->assertExists('post-images/' . $file->hashName());
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    "attributes" => [
+                        'body' => 'Testing Body',
+                        'image' => url('post-images/' . $file->hashName()),
+                    ],
                 ],
             ]);
     }
