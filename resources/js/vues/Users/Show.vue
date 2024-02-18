@@ -6,7 +6,7 @@
           image-width="1500"
           image-height="300"
           location="cover"
-          :user-image="user?.data?.attributes?.cover_image"
+          :user-image="user?.data?.attributes.cover_image"
         />
       </div>
       <div class="absolute flex items-center bottom-0 left-0 -mb-8 ml-12 z-20">
@@ -73,6 +73,12 @@ import { useStore } from "vuex";
 const route = useRoute();
 const store = useStore();
 const posts = computed(() => store.getters.posts);
+
+onMounted(() => {
+  store.dispatch("fetchUser", route.params.userId);
+  store.dispatch("fetchUserPost", route.params.userId);
+});
+const user = computed(() => store.getters.profileuser);
 const postLoading = computed(() => {
   if (
     store.getters.newsPostsStatus === null ||
@@ -82,10 +88,5 @@ const postLoading = computed(() => {
   } else {
     return false;
   }
-});
-const user = computed(() => store.getters.profileuser);
-onMounted(() => {
-  store.dispatch("fetchUser", route.params.userId);
-  store.dispatch("fetchUserPost", route.params.userId);
 });
 </script>

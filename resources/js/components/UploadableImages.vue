@@ -1,7 +1,7 @@
 <template>
   <div>
     <img
-      src="https://cdn.pixabay.com/photo/2017/03/26/12/13/countryside-2175353_960_720.jpg"
+      :src="imageObject?.data?.attributes?.path"
       alt="user background image"
       ref="userImage"
       class="object-cover w-full"
@@ -12,14 +12,25 @@
 import Dropzone from "dropzone";
 import { onMounted, ref, getCurrentInstance, computed } from "vue";
 const dropzone = ref(null);
+let uploadedImage = ref(null);
+onMounted(() => {
+  dropzone.value = new Dropzone(
+    getCurrentInstance().ctx.$refs.userImage,
+    //syntax for usage of $ref in composition api
+    settings.value
+  );
+});
 const props = defineProps([
   "imageWidth",
   "imageHeight",
   "location",
   // "classes",
   // "alt",
-  //   "userImage",
+  "userImage",
 ]);
+const imageObject = computed(() => {
+  return uploadedImage || props.userImage;
+});
 const settings = computed(() => {
   return {
     paramName: "image",
@@ -36,17 +47,12 @@ const settings = computed(() => {
     },
     success: (e, res) => {
       alert("uploaded!");
+      console.log(res);
+      uploadedImage = res;
       //   store.dispatch("fetchAuthUser");
       //   store.dispatch("fetchProfileUser", route.params.userId);
       //   store.dispatch("fetchUserPost", route.params.userId);
     },
   };
-});
-onMounted(() => {
-  dropzone.value = new Dropzone(
-    getCurrentInstance().ctx.$refs.userImage,
-    //syntax for usage of $ref in composition api
-    settings.value
-  );
 });
 </script>
